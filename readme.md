@@ -11,7 +11,7 @@ source umba_env/bin/activate
 bash setup.sh
 
 
-## API shot:
+## API Documentation Shot:
 
 <img width="1280" alt="Screen Shot 2023-02-28 at 11 56 35 AM" src="https://user-images.githubusercontent.com/20647487/221834421-8a2d79f1-c80b-4434-bcd5-f39133e0e179.png">
 
