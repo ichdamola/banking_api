@@ -1,6 +1,9 @@
-from django.conf import settings
-from rest_framework import authentication, exceptions
+# 3rd party imports
 import jwt
+from rest_framework import authentication, exceptions
+
+# system imports
+from django.conf import settings
 
 from . import models
 
