@@ -13,20 +13,49 @@ class AccountTests(SetUp):
     accounts_url = reverse("accounts-list")
 
     def test_create_account(self):
-        user = User.objects.create_user(
-            first_name=self.fake.unique.first_name(),
-            last_name=self.fake.unique.last_name(),
-            phone_number=self.fake.phone_number(),
-            email=self.fake.email(),
-            password="testpass123",
-        )
         data = {
             "account_name": "Test Account",
             "amount": 1000,
-            "user": user.id,
+            "user": self.user.id,
         }
         response = self.client.post(self.accounts_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         account = Account.objects.get(id=response.data["id"])
         serializer = AccountSerializer(account)
         self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_account(self):
+        """
+        Ensure we can retrieve an existing account object.
+        """
+        account = Account.objects.create(
+            account_name="Test Account", user=self.user
+        )
+        url = reverse("accounts-detail", args=[account.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["account_name"], account.account_name)
+
+    def test_update_account(self):
+        """
+        Ensure we can update an existing account object.
+        """
+        account = Account.objects.create(
+            account_name="Test Account", user=self.user
+        )
+        url = reverse("accounts-detail", args=[account.id])
+        data = {"account_name": "Updated Test Account", "user": self.user.id}
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["account_name"], data["account_name"])
+
+    def test_delete_account(self):
+        """
+        Ensure we can delete an existing account object.
+        """
+        account = Account.objects.create(
+            account_name="Test Account", user=self.user
+        )
+        url = reverse("accounts-detail", args=[account.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
